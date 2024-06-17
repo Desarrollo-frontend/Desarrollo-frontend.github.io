@@ -22,6 +22,11 @@ def connection():
     
     return connectionsql
 
+@app.route('/')
+@app.route('/data/')
+def index():
+    return 'Esta es la página principal de la aplicación.'
+
 @app.route('/data/<cedula>')
 def getByCedula(cedula):
     try:
@@ -50,4 +55,4 @@ def getByCedula(cedula):
         return jsonify({'error': str(e)}), 500
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=5000)
