@@ -1,14 +1,15 @@
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, request
 import pyodbc
+import os
 
 app = Flask(__name__)
 
 # Configuración de la base de datos
 DATABASE_CONFIG = {
-    'server': "191.239.122.127",  # Dirección IP del servidor SQL
-    'database': "FNA",
-    'username': "FNA",
-    'password': "D0cUm3nT2024*.",
+    'server': os.getenv('DB_SERVER', '191.239.122.127'),  # Dirección IP del servidor SQL
+    'database': os.getenv('DB_NAME', 'FNA'),
+    'username': os.getenv('DB_USERNAME', 'FNA'),
+    'password': os.getenv('DB_PASSWORD', 'D0cUm3nT2024*.'),
     'driver': '{SQL Server}'
 }
 
@@ -20,10 +21,6 @@ def connection():
     connectionsql = pyodbc.connect(conn_str)
     
     return connectionsql
-
-@app.route('/')
-def index():
-    return render_template('index.html')
 
 @app.route('/data/<cedula>')
 def getByCedula(cedula):
@@ -46,13 +43,8 @@ def getByCedula(cedula):
         cursor.close()
         connectionql.close()
 
-        # Verifica el tipo de solicitud: JSON o texto plano
-        if 'application/json' in request.headers.get('Accept', ''):
-            return jsonify(result)
-        else:
-            # Si la solicitud no acepta JSON, devolver texto plano
-            result_text = '\n'.join([f"Inv Number: {row['inv_number']}, Asunto: {row['d_asunto']}, D Number: {row['d_number']}" for row in result])
-            return result_text
+        # Devuelve los datos en formato JSON
+        return jsonify(result)
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
