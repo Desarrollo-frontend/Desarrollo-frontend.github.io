@@ -1,11 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API-FNA</title>
+    <title>Consulta de Datos por Cédula</title>
 </head>
 <body>
-    
+    <h1>Consulta de Datos por Cédula</h1>
+    <form id="cedulaForm">
+        <label for="cedula">Ingrese la cédula:</label>
+        <input type="text" id="cedula" name="cedula" required>
+        <button type="submit">Buscar</button>
+    </form>
+    <div id="results">
+        <!-- Aquí se mostrarán los resultados -->
+    </div>
+
+    <script>
+        document.getElementById('cedulaForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            let cedula = document.getElementById('cedula').value.trim();
+
+            // Realizar la solicitud GET a la API Flask
+            fetch(`/data/${cedula}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Construir el HTML para mostrar los resultados
+                    let resultsHtml = '<h2>Resultados:</h2>';
+                    if (data.length === 0) {
+                        resultsHtml += '<p>No se encontraron resultados.</p>';
+                    } else {
+                        resultsHtml += '<ul>';
+                        data.forEach(item => {
+                            resultsHtml += `<li>Inv Number: ${item.inv_number}, Asunto: ${item.d_asunto}, D Number: ${item.d_number}</li>`;
+                        });
+                        resultsHtml += '</ul>';
+                    }
+                    document.getElementById('results').innerHTML = resultsHtml;
+                })
+                .catch(error => {
+                    console.error('Error al obtener datos:', error);
+                    document.getElementById('results').innerHTML = '<p>Ocurrió un error al obtener los datos.</p>';
+                });
+        });
+    </script>
 </body>
 </html>
