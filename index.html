@@ -22,7 +22,7 @@
             let cedula = document.getElementById('cedula').value.trim();
 
             // Realizar la solicitud GET a la API Flask
-            fetch(`/data/${cedula}`)
+            fetch(`https://desarrollo-frontend.github.io/data/${cedula}`)
                 .then(response => response.json())
                 .then(data => {
                     // Construir el HTML para mostrar los resultados
