@@ -22,10 +22,6 @@ def connection():
 
     return connectionsql
 
-@app.route('/')
-def root():
-    return 'Hola :), Alex trabaje'
-
 @app.route('/data/<cedula>')
 def getByCedula(cedula):
     try:
