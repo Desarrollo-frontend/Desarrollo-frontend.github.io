@@ -25,7 +25,7 @@ def connection():
 @app.route('/')
 @app.route('/data/')
 def index():
-    return "<h1>Annuaire Internet</h1><p>Ce site est le prototype d’une API mettant à disposition des données sur les employés d’une entreprise.</p>"
+    return "<h1>Annuaire Internet</h1><p>Holaaaaaaaaaaaaaaa.</p>"
 
 
 @app.route('/data/<cedula>')
