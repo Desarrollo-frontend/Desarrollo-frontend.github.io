@@ -3,46 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consulta de Datos por Cédula</title>
+    <title>Datos</title>
 </head>
 <body>
-    <h1>Consultaaaaaa de Datos por Cédula</h1>
-    <form id="cedulaForm">
-        <label for="cedula">Ingrese la cédula:</label>
-        <input type="text" id="cedula" name="cedula" required>
-        <button type="submit">Buscar</button>
-    </form>
-    <div id="results">
-        <!-- Aquí se mostrarán los resultados -->
-    </div>
-
-    <script>
-        document.getElementById('cedulaForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            let cedula = document.getElementById('cedula').value.trim();
-
-            // Realizar la solicitud GET a la API Flask
-            fetch(`https://desarrollo-frontend.github.io/data/${cedula}`)
-                .then(response => response.json())
-                .then(data => {
-                    // Construir el HTML para mostrar los resultados
-                    let resultsHtml = '<h2>Resultados:</h2>';
-                    if (data.length === 0) {
-                        resultsHtml += '<p>No se encontraron resultados.</p>';
-                    } else {
-                        resultsHtml += '<ul>';
-                        data.forEach(item => {
-                            resultsHtml += `<li>Inv Number: ${item.inv_number}, Asunto: ${item.d_asunto}, D Number: ${item.d_number}</li>`;
-                        });
-                        resultsHtml += '</ul>';
-                    }
-                    document.getElementById('results').innerHTML = resultsHtml;
-                })
-                .catch(error => {
-                    console.error('Error al obtener datos:', error);
-                    document.getElementById('results').innerHTML = '<p>Ocurrió un error al obtener los datos.</p>';
-                });
-        });
-    </script>
+    <h1>Datos obtenidos:</h1>
+    <ul>
+        {% for entry in entries %}
+            <li>
+                <strong>inv_number:</strong> {{ entry.inv_number }} <br>
+                <strong>d_asunto:</strong> {{ entry.d_asunto }} <br>
+                <strong>d_number:</strong> {{ entry.d_number }} <br>
+                <hr>
+            </li>
+        {% endfor %}
+    </ul>
 </body>
 </html>
