@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 import pyodbc
 import os
 
@@ -23,21 +23,27 @@ def connection():
     return connectionsql
 
 @app.route('/')
-@app.route('/data/')
 def index():
-    return "<h1>Annuaire Internet</h1><p>Holaaaaaaaaaaaaaaa.</p>"
+    return render_template('index.html')
 
+@app.route('/data/', methods=['GET', 'POST'])
+def getByCedula():
+    if request.method == 'GET':
+        return jsonify({'message': 'Utilice el formulario para enviar una cedula'}), 400
+    
+    cedula = request.form.get('cedula', '')
 
-@app.route('/data/<cedula>')
-def getByCedula(cedula):
+    if not cedula:
+        return jsonify({'error': 'Especifique un número de cedula'}), 400
+
     try:
         # Establece la conexión a la base de datos
         connectionql = connection()
         cursor = connectionql.cursor()
 
         # Ejecuta la consulta SQL para obtener los datos
-        query = f"SELECT inv_number, d_asunto, d_number FROM inventoryview WHERE d_number LIKE '%{cedula}%'"
-        cursor.execute(query)
+        query = "SELECT inv_number, d_asunto, d_number FROM inventoryview WHERE d_number LIKE ?"
+        cursor.execute(query, f'%{cedula}%')
 
         # Obtiene los resultados de la consulta
         data = cursor.fetchall()
