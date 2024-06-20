@@ -3,6 +3,4 @@ pyodbc
 gunicorn
 python-dotenv
 jsonify
-request
-render_template
-os
+requests
